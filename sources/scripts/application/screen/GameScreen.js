@@ -200,10 +200,10 @@ var GameScreen = AbstractScreen.extend({
 		if(this.crazyLabel2 && this.crazyLabel2.parent){
 			this.crazyLabel2.parent.removeChild(this.crazyLabel2);
 		}
-		var rot = Math.random() * 0.01 + 0.04;
+		var rot = Math.random() * 0.03 + 0.05;
 		rot = Math.random() < 0.5? -rot:rot;
 		var scl = 1;
-		this.crazyLabel = new PIXI.Text(message, {align:'center',font:'35px Vagron', fill:'#9d47e0', wordWrap:true, wordWrapWidth:500});
+		this.crazyLabel = new PIXI.Text(message, {align:'center',font:'40px Vagron', fill:'#9d47e0', wordWrap:true, wordWrapWidth:500});
 		// scl = scaleConverter(this.crazyLabel.height, windowHeight, 0.06, this.crazyLabel);
 		this.crazyLabel.resolution = 2;//retina;
 		this.crazyLabel.rotation = rot;
@@ -211,7 +211,7 @@ var GameScreen = AbstractScreen.extend({
 		this.crazyLabel.position.x = windowWidth / 2;
 		this.crazyLabel.anchor = {x:0.5, y:0.5};
 
-		this.crazyLabel2 = new PIXI.Text(message, {align:'center',font:'35px Vagron', fill:'#13c2b6', wordWrap:true, wordWrapWidth:500});
+		this.crazyLabel2 = new PIXI.Text(message, {align:'center',font:'40px Vagron', fill:'#13c2b6', wordWrap:true, wordWrapWidth:500});
 		this.crazyLabel2.resolution = 2;//retina;
 		// scaleConverter(this.crazyLabel2.height, windowHeight, 0.06, this.crazyLabel2);
 		this.crazyLabel2.rotation = -rot;

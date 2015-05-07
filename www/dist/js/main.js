@@ -1860,12 +1860,12 @@ var Application = AbstractApplication.extend({
             this.crazyLabel.parent.removeChild(this.crazyLabel);
         }
         this.crazyLabel2 && this.crazyLabel2.parent && this.crazyLabel2.parent.removeChild(this.crazyLabel2);
-        var rot = .01 * Math.random() + .04;
+        var rot = .03 * Math.random() + .05;
         rot = Math.random() < .5 ? -rot : rot;
         var scl = 1;
         this.crazyLabel = new PIXI.Text(message, {
             align: "center",
-            font: "35px Vagron",
+            font: "40px Vagron",
             fill: "#9d47e0",
             wordWrap: !0,
             wordWrapWidth: 500
@@ -1875,7 +1875,7 @@ var Application = AbstractApplication.extend({
             y: .5
         }, this.crazyLabel2 = new PIXI.Text(message, {
             align: "center",
-            font: "35px Vagron",
+            font: "40px Vagron",
             fill: "#13c2b6",
             wordWrap: !0,
             wordWrapWidth: 500
