@@ -4,7 +4,8 @@ function testMobile() {
 	return Modernizr.touch;// || window.innerWidth < 600;//true;// Modernizr.touch || window.innerWidth < 600;
 }
 
-var res = {x:window.outerWidth, y: window.outerHeight};
+// var res = {x:window.outerWidth, y: window.outerHeight};
+var res = {x:window.innerWidth, y: window.innerHeight};
 // var res = {x:375, y:667};
 var resizeProportional = true;
 
@@ -27,9 +28,9 @@ if(!testMobile()){
 }
 console.log(gameView);
 
-window.addEventListener('orientationchange', function() {
-	window.scrollTo(0, 0);
-}, false);
+// window.addEventListener('orientationchange', function() {
+// 	window.scrollTo(0, 0);
+// }, false);
 
 var ratio = 1;
 
@@ -138,8 +139,11 @@ function update() {
 	// 	windowHeightVar = realWindowHeight;
 	// }
 	if(renderer){
-		// renderer.view.style.height = windowWidthVar+'px';
-		// renderer.view.style.width = windowHeightVar+'px';
+		// :window.innerWidth, y: window.innerHeight
+
+
+		// renderer.view.style.height = window.innerHeight+'px';
+		// renderer.view.style.width = window.innerWidth+'px';
 
 		
 		APP.update();
@@ -178,25 +182,25 @@ function fullscreen(){
 // alert(window.intel);
 
 // window.intel = true;
-window.console.log = function(){};
+// window.console.log = function(){};
 // initialize();
+initialize();
 document.addEventListener('deviceready', function() {
-	initialize();
 	// alert(admobAd);
 
-	window.plugins.AdMob.setOptions( {
-        publisherId: 'ca-app-pub-9306461054994106/3948461573',
-        // interstitialAdId: admobid.interstitial,
-        bannerAtTop: false, // set to true, to put banner at top
-        overlap: false, // set to true, to allow banner overlap webview
-        offsetTopBar: false, // set to true to avoid ios7 status bar overlap
-        isTesting: false, // receiving test ad
-        autoShow:true
-    });
-	window.plugins.AdMob.createBannerView();
-	window.plugins.AdMob.showAd(true,function(){},function(e){
-		//alert(JSON.stringify(e));
-	});
+	// window.plugins.AdMob.setOptions( {
+ //        publisherId: 'ca-app-pub-9306461054994106/3948461573',
+ //        // interstitialAdId: admobid.interstitial,
+ //        bannerAtTop: false, // set to true, to put banner at top
+ //        overlap: false, // set to true, to allow banner overlap webview
+ //        offsetTopBar: false, // set to true to avoid ios7 status bar overlap
+ //        isTesting: false, // receiving test ad
+ //        autoShow:true
+ //    });
+	// window.plugins.AdMob.createBannerView();
+	// window.plugins.AdMob.showAd(true,function(){},function(e){
+	// 	//alert(JSON.stringify(e));
+	// });
 	// admobAd.initBanner('ca-app-pub-9306461054994106/3948461573', admobAd.AD_SIZE.BANNER.width, admobAd.AD_SIZE.BANNER.height);//create admob banner
 	// admobAd.showBannerAbsolute(0,0);//show banner at absolute position
 

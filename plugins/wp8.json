@@ -9,10 +9,6 @@
                 "parents": {
                     "/*": [
                         {
-                            "xml": "<feature name=\"Device\"><param name=\"wp-package\" value=\"Device\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"AdMob\"><param name=\"wp-package\" value=\"AdMob\" /></feature>",
                             "count": 1
                         },
@@ -27,10 +23,6 @@
                 "parents": {
                     "/Deployment/App/Capabilities": [
                         {
-                            "xml": "<Capability Name=\"ID_CAP_IDENTITY_DEVICE\" />",
-                            "count": 1
-                        },
-                        {
                             "xml": "<Capability Name=\"ID_CAP_LOCATION\" />",
                             "count": 1
                         }
@@ -41,9 +33,6 @@
     },
     "installed_plugins": {
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "{ecdac690-f44c-11e4-8288-b5507edf9941}"
-        },
-        "org.apache.cordova.device": {
             "PACKAGE_NAME": "{ecdac690-f44c-11e4-8288-b5507edf9941}"
         },
         "com.rjfun.cordova.plugin.admob": {

@@ -72,6 +72,8 @@ var Ball = Entity.extend({
         this.perfectShoot = 0;
         this.perfectShootAcum = 0;
         this.force = 0;
+		this.inJump = false;
+
 	},
 	setFloor: function(pos){
 		this.floorPos = pos;
@@ -94,6 +96,7 @@ var Ball = Entity.extend({
 		this.velocity.y = - force - ((this.gravityVal * this.gravityVal) / 1.5) * 10;
 		console.log(this.velocity.y, this.gravityVal);
 		this.firstJump = true;
+		this.inJump = true;
 	},
 	improveGravity: function(){
 		if(this.gravityVal >= 1.2){
@@ -121,6 +124,7 @@ var Ball = Entity.extend({
 		if(this.getContent().position.y + this.velocity.y >= this.floorPos + this.maxSize){//} + this.spriteBall.height / 2){
 			if(this.firstJump){
 				this.screen.addCrazyMessage('RELEASE');
+				
 			}
 			this.getContent().position.y = this.floorPos + this.maxSize;// + this.spriteBall.height / 2;
 			this.velocity.y = 0;
@@ -129,6 +133,10 @@ var Ball = Entity.extend({
 			this.blockCollide = false;
 			this.inError = false;
 			this.force = 0;
+			if(this.inJump){
+				this.explode();
+				this.inJump = false;
+			}
 		}else if(this.breakJump||this.velocity.y !==0){
 			this.velocity.y += this.gravityVal;
 			this.breakJump = true;
@@ -313,6 +321,22 @@ var Ball = Entity.extend({
         particle.getContent().parent.setChildIndex(particle.getContent() , 0);
 
         
+	},
+	explode:function(){
+		tempParticle = new PIXI.Graphics();
+		tempParticle.beginFill(this.color);
+		tempParticle.drawCircle(0,0,this.spriteBall.width);
+
+		particle = new Particles({x: 0, y:0}, 600, tempParticle, 0);
+		particle.maxScale = this.getContent().scale.x * 5;
+        particle.maxInitScale = 1;
+		particle.build();
+		// particle.getContent().tint = 0xf5c30c;
+		// particle.gravity = 0.3 * Math.random();
+		particle.alphadecress = 0.08;
+		particle.scaledecress = 0.1;
+		particle.setPosition(this.getPosition().x,this.getPosition().y);
+		this.layer.addChild(particle);
 	},
 	preKill:function(){
 		if(this.invencible){

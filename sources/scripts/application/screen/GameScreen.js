@@ -84,7 +84,10 @@ var GameScreen = AbstractScreen.extend({
 
 		this.hitTouch.touchend = this.hitTouch.mouseup = function(mouseData){
 			self.tapDown = false;
-			self.shoot(self.force * gameScale);
+			// self.shoot(self.force * gameScale);
+			// var sc = 667 / windowHeight;
+			// console.log((self.force / 30), windowHeight * 0.1);
+			self.shoot((self.force / 30) * windowHeight * 0.1);
 		};
 
 		this.hitTouch.touchstart = this.hitTouch.mousedown = function(touchData){
@@ -168,7 +171,7 @@ var GameScreen = AbstractScreen.extend({
 		this.addChild(this.crazyContent);
 		
 
-		this.loaderBar = new LifeBarHUD(windowWidth, 20, 0, 0xFFFFFF, 0xFFFFFF);
+		this.loaderBar = new LifeBarHUD(windowWidth, 30, 0, 0xFFFFFF, 0xFFFFFF);
 		this.addChild(this.loaderBar.getContent());
 		this.loaderBar.getContent().position.x = 0;//windowWidth / 2 - this.loaderBar.getContent().width / 2;
 		this.loaderBar.getContent().position.y = 0;//windowHeight / 1.1;
@@ -200,16 +203,16 @@ var GameScreen = AbstractScreen.extend({
 		var rot = Math.random() * 0.01 + 0.04;
 		rot = Math.random() < 0.5? -rot:rot;
 		var scl = 1;
-		this.crazyLabel = new PIXI.Text(message, {align:'center',font:'30px Vagron', fill:'#9d47e0', wordWrap:true, wordWrapWidth:500});
+		this.crazyLabel = new PIXI.Text(message, {align:'center',font:'35px Vagron', fill:'#9d47e0', wordWrap:true, wordWrapWidth:500});
 		// scl = scaleConverter(this.crazyLabel.height, windowHeight, 0.06, this.crazyLabel);
-		this.crazyLabel.resolution = retina;
+		this.crazyLabel.resolution = 2;//retina;
 		this.crazyLabel.rotation = rot;
 		this.crazyLabel.position.y = windowHeight / 2+ this.crazyLabel.height;//windowHeight / 1.1 + this.crazyLabel.height / 2 / this.crazyLabel.resolution;
 		this.crazyLabel.position.x = windowWidth / 2;
 		this.crazyLabel.anchor = {x:0.5, y:0.5};
 
-		this.crazyLabel2 = new PIXI.Text(message, {align:'center',font:'30px Vagron', fill:'#13c2b6', wordWrap:true, wordWrapWidth:500});
-		this.crazyLabel2.resolution = retina;
+		this.crazyLabel2 = new PIXI.Text(message, {align:'center',font:'35px Vagron', fill:'#13c2b6', wordWrap:true, wordWrapWidth:500});
+		this.crazyLabel2.resolution = 2;//retina;
 		// scaleConverter(this.crazyLabel2.height, windowHeight, 0.06, this.crazyLabel2);
 		this.crazyLabel2.rotation = -rot;
 		this.crazyLabel2.position.y = windowHeight / 2+ this.crazyLabel2.height;//windowHeight / 1.1 + this.crazyLabel2.height / 2 / this.crazyLabel2.resolution;
@@ -323,6 +326,16 @@ var GameScreen = AbstractScreen.extend({
 		if(this.crazyLogo){
 			this.crazyLogo.update();
 		}
+
+		if(this.base){
+			if(!this.base.side){
+				this.base.side = 1;
+			}
+			this.base.alpha += 0.01 * this.base.side;
+			if(this.base.alpha > 0.5 || this.base.alpha <= 0){
+				this.base.side *= -1;
+			}
+		}
 		this._super();
 	},
 	gameOver:function(){
@@ -333,11 +346,14 @@ var GameScreen = AbstractScreen.extend({
 			this.loaderBar.getContent().alpha = 0;
 			return;
 		}
-		navigator.vibrate(200);
+		if(window.navigator){
+			navigator.vibrate(200);
+		}
 		
 		this.hitTouch.parent.removeChild(this.hitTouch);
 		this.player.preKill();
 		this.targetJump.preKill();
+		this.base.parent.removeChild(this.base);
 		this.earthquake(40);
 		this.endGame = true;
 		this.crazyContent.alpha = 0;
@@ -354,23 +370,45 @@ var GameScreen = AbstractScreen.extend({
 	},
 	openEndMenu:function(){
 
+		var self = this;
+
 
 		this.endMenuContainer = new PIXI.DisplayObjectContainer();
 		this.container.addChild(this.endMenuContainer);
 
+		this.crazyLogo = new CrazyLogo(this);
+		this.crazyLogo.build();
+		this.crazyLogo.getContent().position.x = windowWidth / 2 - this.crazyLogo.getContent().width / 2;
+		this.crazyLogo.getContent().position.y = windowHeight * 0.1;
+		this.endMenuContainer.addChild(this.crazyLogo.getContent());
+		
+		this.inHigh = false;
 		if(APP.points > APP.highscore){
 			APP.cookieManager.setSafeCookie('highscore', APP.points);
 			APP.highscore = APP.points;
+			this.inHigh = true;
 		}
-		// if(APP.points)
+		// this.inHigh = true;
+		this.fistTime = true;
+		var scoreContainer = null;
 		if(this.fistTime){
-			var scoreContainer = new PIXI.DisplayObjectContainer();
+
+			scoreContainer = new PIXI.DisplayObjectContainer();
 			var scoreBack = new PIXI.Graphics();
-			scoreBack.beginFill(0xFFFFFF);
-			scoreBack.drawRoundedRect(0,0,160, 125,5);
+			scoreBack.beginFill(this.inHigh?addBright(APP.vecColors[APP.currentColorID],0.65):0xFFFFFF);
+			scoreBack.drawRoundedRect(0,0,160, 250,5);
 			scoreContainer.addChild(scoreBack);
 
-			var currentScoreTitle = new PIXI.Text('SCORE', {align:'center',font:'18px Vagron', fill:APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:100});
+			if(this.inHigh){
+				var highscoreLabel1 = new PIXI.Text('NEW HIGHSCORE', {align:'center',font:'20px Vagron', fill:'#FFFFFF', wordWrap:true, wordWrapWidth:180});
+				scoreContainer.addChild(highscoreLabel1);
+				highscoreLabel1.resolution = retina;
+
+				highscoreLabel1.position.x = scoreBack.width / 2 - highscoreLabel1.width / 2 / highscoreLabel1.resolution;
+				highscoreLabel1.position.y = -highscoreLabel1.height / 2;
+			}
+
+			var currentScoreTitle = new PIXI.Text('SCORE', {align:'center',font:'30px Vagron', fill:this.inHigh?'#FFFFFF':APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:100});
 			scoreContainer.addChild(currentScoreTitle);
 			currentScoreTitle.resolution = retina;
 
@@ -378,7 +416,7 @@ var GameScreen = AbstractScreen.extend({
 			currentScoreTitle.position.y = 10;
 
 
-			var currentScore = new PIXI.Text(APP.points, {align:'center',font:'30px Vagron', fill:APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:500});
+			var currentScore = new PIXI.Text(APP.points, {align:'center',font:'38px Vagron', fill:this.inHigh?'#FFFFFF':APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:500});
 			scoreContainer.addChild(currentScore);
 			currentScore.resolution = retina;
 
@@ -386,15 +424,15 @@ var GameScreen = AbstractScreen.extend({
 			currentScore.position.y = (currentScoreTitle.position.y + currentScoreTitle.height/ currentScoreTitle.resolution)  - 10;
 
 
-			var highscoreTitle = new PIXI.Text('HIGHSCORE', {align:'center',font:'14px Vagron', fill:APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:100});
+			var highscoreTitle = new PIXI.Text('BEST', {align:'center',font:'20px Vagron', fill:this.inHigh?'#FFFFFF':APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:100});
 			scoreContainer.addChild(highscoreTitle);
 			highscoreTitle.resolution = retina;
 
 			highscoreTitle.position.x = scoreBack.width / 2 - highscoreTitle.width / 2 / highscoreTitle.resolution;
 			highscoreTitle.position.y = currentScore.position.y + currentScore.height / currentScore.resolution;
 
-
-			var highScoreLabel = new PIXI.Text(APP.highscore, {align:'center',font:'22px Vagron', fill:APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:500});
+// tempColor = addBright(temptempColor, 0.65);
+			var highScoreLabel = new PIXI.Text(APP.highscore, {align:'center',font:'28px Vagron', fill:this.inHigh?'#FFFFFF':APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:500});
 			scoreContainer.addChild(highScoreLabel);
 			highScoreLabel.resolution = retina;
 
@@ -405,6 +443,58 @@ var GameScreen = AbstractScreen.extend({
 			scoreContainer.position.x = windowWidth / 2 - scoreBack.width / 2;
 			scoreContainer.position.y = windowHeight/2 - scoreBack.height / 2;
 			this.endMenuContainer.addChild(scoreContainer);
+
+			// if(APP.points)
+
+			var twContainer = new PIXI.DisplayObjectContainer();
+			var twButton = new PIXI.Graphics();
+			twButton.beginFill(0x4099FF);
+			twButton.drawRoundedRect(0,0,120, 30,5);
+			var twLabel = new PIXI.Text('Twitter', {align:'center',font:'20px Vagron', fill:'#FFFFFF', wordWrap:true, wordWrapWidth:500});
+			twLabel.position.x = 29;
+			twLabel.position.y = 3;
+			twLabel.resolution = 2;//retina;
+			twContainer.addChild(twButton);
+			twContainer.addChild(twLabel);
+
+			scoreContainer.addChild(twContainer);
+			twContainer.position.x = scoreBack.width / 2 - twButton.width / 2;
+			twContainer.position.y = 166;
+			// twContainer.position.y = this.crazyLogo.getContent().position.y + 100;
+
+			// twContainer = new PIXI.DisplayObjectContainer();
+
+			twContainer.interactive = true;
+
+			// twContainer.touchend = twContainer.mouseup = function(mouseData){
+			twContainer.touchstart = twContainer.mousedown = function(mouseData){
+			};
+
+
+			var fbContainer = new PIXI.DisplayObjectContainer();
+			var fbButton = new PIXI.Graphics();
+			fbButton.beginFill(0x3b5998);
+			fbButton.drawRoundedRect(0,0,120, 30,5);
+			var fbLabel = new PIXI.Text('Facebook', {align:'center',font:'20px Vagron', fill:'#FFFFFF', wordWrap:true, wordWrapWidth:500});
+			fbLabel.position.x = 17;
+			fbLabel.position.y = 3;
+			fbLabel.resolution = 2;//retina;
+			fbContainer.addChild(fbButton);
+			fbContainer.addChild(fbLabel);
+
+			scoreContainer.addChild(fbContainer);
+			fbContainer.position.x = scoreBack.width / 2 - fbButton.width / 2;
+			fbContainer.position.y = 166 + 38;
+			// fbContainer.position.y = this.crazyLogo.getContent().position.y + 100;
+
+			// fbContainer = new PIXI.DisplayObjectContainer();
+
+			fbContainer.interactive = true;
+
+			// fbContainer.touchend = fbContainer.mouseup = function(mouseData){
+			fbContainer.touchstart = fbContainer.mousedown = function(mouseData){
+			};
+
 		}
 
 
@@ -416,25 +506,25 @@ var GameScreen = AbstractScreen.extend({
 		var playAgainLabel = new PIXI.Text('PLAY', {align:'center',font:'30px Vagron', fill:APP.vecColorsS[APP.currentColorID], wordWrap:true, wordWrapWidth:500});
 		playAgainLabel.position.x = 15;
 		playAgainLabel.position.y = 10;
-		playAgainLabel.resolution = retina;
+		playAgainLabel.resolution = 2;//retina;
 		playAgainContainer.addChild(playAgainButton);
 		playAgainContainer.addChild(playAgainLabel);
 
 		this.endMenuContainer.addChild(playAgainContainer);
 		playAgainContainer.position.x = windowWidth / 2 - playAgainButton.width / 2;
-		playAgainContainer.position.y = windowHeight * 0.8 - playAgainContainer.height;
+		playAgainContainer.position.y = scoreContainer?scoreContainer.position.y + scoreContainer.height + 20:windowHeight * 0.8 - playAgainContainer.height;//windowHeight * 0.8 - playAgainContainer.height;
 
 		// playAgainContainer = new PIXI.DisplayObjectContainer();
 
 		playAgainContainer.interactive = true;
 
-		var self = this;
 		// playAgainContainer.touchend = playAgainContainer.mouseup = function(mouseData){
 		playAgainContainer.touchstart = playAgainContainer.mousedown = function(mouseData){
 			TweenLite.to(self.endMenuContainer, 1, {x: windowWidth, y: - 50, ease:'easeOutCubic', onComplete:function(){
 				self.reset();
 			}});
 
+			self.crazyLogo.removeInterval();
 			// TweenLite.to(self.crazyLogo.getContent(), 1, {x: windowWidth, y: windowHeight * 0.2 - 50, ease:'easeOutCubic', onComplete:function(){
 			// 	// self.reset();
 			// }});
@@ -445,11 +535,7 @@ var GameScreen = AbstractScreen.extend({
 			// TweenLite.to(self.interactiveBackground, 2, {gravity:0});
 		};
 
-		this.crazyLogo = new CrazyLogo(this);
-		this.crazyLogo.build();
-		this.endMenuContainer.addChild(this.crazyLogo.getContent());
-		this.crazyLogo.getContent().position.x = windowWidth / 2 - this.crazyLogo.getContent().width / 2;
-		this.crazyLogo.getContent().position.y = windowHeight * 0.1;
+		
 		TweenLite.from(this.crazyLogo.getContent(), 4.5, {x: windowWidth * 1.1, y:this.crazyLogo.getContent().position.y - 50, ease:'easeOutElastic'});
 
 		TweenLite.from(this.endMenuContainer, 5, {x: windowWidth * 1.1, y:this.endMenuContainer.position.y - 50, ease:'easeOutElastic'});
@@ -485,7 +571,10 @@ var GameScreen = AbstractScreen.extend({
 		// }
 	},
 	getPerfect:function(){
-		navigator.vibrate(200);
+		if(window.navigator){
+			navigator.vibrate(200);
+		}
+		// navigator.vibrate(200);
 		this.addRegularLabel(APP.vecPerfects[Math.floor(APP.vecPerfects.length * Math.random())], '50px Vagron');
 		this.earthquake(40);
 		this.levelCounter += this.levelCounterMax * 0.05;
@@ -509,26 +598,32 @@ var GameScreen = AbstractScreen.extend({
 		this.earthquake(20);
 		this.changeColor();
 	},
-	changeColor:function(force, first){
+	changeColor:function(force, first, forceColor){
 		var tempColor = 0;
 		var self = this;
 		if(!first){
-			console.log('randomHEre');
-			APP.currentColorID = Math.floor(APP.vecColors.length * Math.random());
+			// console.log('randomHEre');
+			APP.currentColorID = forceColor?APP.currentColorID:Math.floor(APP.vecColors.length * Math.random());
 		}
 		var temptempColor = APP.vecColors[APP.currentColorID];
-		console.log(temptempColor);
+
 		if(force){
 			self.background.clear();
 			self.background.beginFill(temptempColor);
 			self.background.drawRect(-80,-80,windowWidth + 160, windowHeight + 160);
+			// document.body.style.backgroundColor = APP.backColor;
 		}else{
+			if(forceColor){
+				APP.backColor = APP.vecColors[Math.floor(APP.vecColors.length * Math.random())];
+			}
 			TweenLite.to(APP, 0.3, {backColor:temptempColor, onUpdate:function(){
 				self.background.clear();
 				self.background.beginFill(APP.backColor);
 				self.background.drawRect(-80,-80,windowWidth + 160, windowHeight + 160);
 			}});
 		}
+		document.body.style.backgroundColor = APP.vecColorsS[APP.currentColorID];
+		console.log(document.body.style.backgroundColor);
 		if(!this.player){
 			return;
 		}
@@ -580,8 +675,16 @@ var GameScreen = AbstractScreen.extend({
 		this.layer.addChild(this.player);
 		this.player.getContent().position.x = windowWidth / 2;
 		this.player.getContent().position.y = windowHeight / 1.2;
-		var base = windowHeight / 1.2;
-		this.player.setFloor(base);
+		var baseFloor = windowHeight / 1.2;
+		this.player.setFloor(baseFloor);
+
+		this.base = new PIXI.Graphics();
+		this.base.beginFill(0xFFFFFF);
+		this.base.drawCircle(0,0,windowHeight - baseFloor);
+		this.addChild(this.base);
+		this.base.alpha = 0;
+		this.base.position.x = windowWidth / 2;
+		this.base.position.y = windowHeight + this.player.spriteBall.height / 2;
 		// this.brilhoBase.getContent().position.y = base +  this.player.spriteBall.height / 2;
 
 		this.targetJump = new Coin({x:0,y:0});

@@ -218,9 +218,6 @@
         </PostBuildEvent>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Plugins\org.apache.cordova.device\Device.cs" />
-    </ItemGroup>
-    <ItemGroup>
         <Reference Include="GoogleAds">
             <HintPath>plugins\com.google.admobsdk\GoogleAds.dll</HintPath>
         </Reference>
