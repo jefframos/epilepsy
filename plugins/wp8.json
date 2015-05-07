@@ -1,0 +1,61 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"wp-package\" value=\"Device\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"AdMob\"><param name=\"wp-package\" value=\"AdMob\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"wp-package\" value=\"Vibration\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "Properties/WMAppManifest.xml": {
+                "parents": {
+                    "/Deployment/App/Capabilities": [
+                        {
+                            "xml": "<Capability Name=\"ID_CAP_IDENTITY_DEVICE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<Capability Name=\"ID_CAP_LOCATION\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "{ecdac690-f44c-11e4-8288-b5507edf9941}"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "{ecdac690-f44c-11e4-8288-b5507edf9941}"
+        },
+        "com.rjfun.cordova.plugin.admob": {
+            "PACKAGE_NAME": "{ecdac690-f44c-11e4-8288-b5507edf9941}"
+        },
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "{ecdac690-f44c-11e4-8288-b5507edf9941}"
+        }
+    },
+    "dependent_plugins": {
+        "com.google.admobsdk": {
+            "PACKAGE_NAME": "{ecdac690-f44c-11e4-8288-b5507edf9941}"
+        }
+    }
+}

@@ -1,0 +1,16 @@
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\ApplicationIcon.png
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\Background.png
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\me.jefframos.epilepsy.dll
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\me.jefframos.epilepsy.pdb
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\AppManifest.xaml
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\Properties\WMAppManifest.xml
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\CordovaAppProj_Debug_AnyCPU.xap
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\App.g.cs
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\cordovalib\CordovaView.g.cs
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\MainPage.g.cs
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\me.jefframos.epilepsy.g.resources
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\me.jefframos.epilepsy.dll
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\me.jefframos.epilepsy.pdb
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\XapCacheFile.xml
+c:\wamp\www\epilepsy\platforms\wp8\Bin\Debug\GoogleAds.dll
+c:\wamp\www\epilepsy\platforms\wp8\obj\Debug\Epilepsy.csprojResolveAssemblyReference.cache
